@@ -21,7 +21,12 @@ async function run() {
     const productsCollection = client.db("GUIDANCE-CAR").collection("products");
 
     app.get("/products", async (req, res) => {
-      const query = {};
+      let query = {};
+      if (req.query.categoryName) {
+        query = {
+          categoryName: req.query.categoryName,
+        };
+      }
       const cursor = productsCollection.find(query);
       const products = await cursor.toArray();
       res.send(products);
