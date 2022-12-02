@@ -19,9 +19,11 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const productsCollection = client.db("GUIDANCE-CAR").collection("products");
+    const bookingsCollection = client.db("GUIDANCE-CAR").collection("bookings");
 
     app.get("/products", async (req, res) => {
       let query = {};
+
       if (req.query.categoryName) {
         query = {
           categoryName: req.query.categoryName,
@@ -30,6 +32,14 @@ async function run() {
       const cursor = productsCollection.find(query);
       const products = await cursor.toArray();
       res.send(products);
+    });
+
+    // Bookig
+    app.post("/bookings", async (req, res) => {
+      const booking = req.body;
+      // console.log(booking);
+      const result = await bookingsCollection.insertOne(booking);
+      res.send(result);
     });
   } finally {
   }
